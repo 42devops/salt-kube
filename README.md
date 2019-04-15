@@ -52,7 +52,7 @@ salt-run state.orchestrate orch.kubernetes saltenv=local
 - [ ] Calico network suport
 - [ ] Monitor support(prometheus stack)
 - [ ] Logging support(fluentbit stack)
-- [ ] [isio](https://istio.io/) support
+- [ ] [istio](https://istio.io/) support
 - [ ] [dex](https://github.com/dexidp/dex) support
 - [ ] cert renew auto as `salt-run` task
 - [ ] find a way to Testing
