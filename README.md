@@ -44,18 +44,18 @@ salt-run state.orchestrate orch.kubernetes saltenv=local
 
 ## TODO
 
-[ ] CoreDNS addons setup
-[ ] Ingress addons setup
-[ ] Containerd support
-[ ] Calico network suport
-[ ] Monitor support(prometheus stack)
-[ ] Logging support(fluentbit stack)
-[ ] [isio](https://istio.io/) support
-[ ] [dex](https://github.com/dexidp/dex) support
-[ ] cert renew auto as `salt-run` task
-[ ] find a way to Testing
-[ ] all local install from yum repo OR nexus repo
-[ ] ...
+- [ ] CoreDNS addons setup
+- [ ] Ingress addons setup
+- [ ] Containerd support
+- [ ] Calico network suport
+- [ ] Monitor support(prometheus stack)
+- [ ] Logging support(fluentbit stack)
+- [ ] [isio](https://istio.io/) support
+- [ ] [dex](https://github.com/dexidp/dex) support
+- [ ] cert renew auto as `salt-run` task
+- [ ] find a way to Testing
+- [ ] all local install from yum repo OR nexus repo
+- [ ] ...
 
 ## Reference
 
