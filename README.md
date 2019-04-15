@@ -1,4 +1,4 @@
-## Salt_kube Project
+## salt-kube Project
 
 - install `git` and `vagrant`.
 - clone repo and download binaries package
@@ -46,6 +46,7 @@ salt-run state.orchestrate orch.kubernetes saltenv=local
 
 ## TODO
 
+- [ ] Add good README page
 - [ ] CoreDNS addons setup
 - [ ] Ingress addons setup
 - [ ] Containerd support
