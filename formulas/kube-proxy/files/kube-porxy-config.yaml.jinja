@@ -1,0 +1,6 @@
+kind: KubeProxyConfiguration
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+clientConnection:
+  kubeconfig: "{{ pillar['paths']['kube_proxy_config'] }}"
+mode: "ipvs"
+clusterCIDR: "{{ pillar['kubernetes']['lookup']['kube-controller-manager']['cluster_cidr'] }}"

@@ -1,0 +1,12 @@
+{%  set encryption_key = salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:encryption_key') %}
+kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: {{ encryption_key }}
+      - identity: {}

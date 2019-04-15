@@ -1,0 +1,48 @@
+{%- set this_nodename = grains['nodename'] %}
+{% set netiface = salt.caasp_pillar.get('hw:netiface') %}
+{%- set this_ip = grains['ip4_interfaces'][netiface][0] %}
+{% set etcd_datadir = salt.caasp_pillar.get('etcd:data_dir') %}
+{% set cluster_ep = [] -%}
+{% for server, addr in salt['mine.get']('roles:etcd', 'network.ip_addrs', tgt_type='grain').items() -%}
+{% if cluster_ep.append( server + "=https://" + addr[0] + ":2380") -%}
+{% endif -%}
+{% endfor -%}
+[Unit]
+Description=Etcd Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/coreos
+
+[Service]
+Type=notify
+User=etcd
+Group=etcd
+ExecStart=/usr/local/bin/etcd \
+  --data-dir={{ etcd_datadir }} \
+  --name={{ this_nodename }} \
+  --cert-file={{ pillar['ssl']['crt_file'] }} \
+  --key-file={{ pillar['ssl']['key_file'] }} \
+  --trusted-ca-file={{ pillar['ssl']['ca_file'] }} \
+  --peer-cert-file={{ pillar['ssl']['crt_file'] }} \
+  --peer-key-file={{ pillar['ssl']['key_file'] }} \
+  --peer-trusted-ca-file={{ pillar['ssl']['ca_file'] }} \
+  --peer-client-cert-auth \
+  --client-cert-auth \
+  --listen-peer-urls=https://{{ this_ip }}:2380 \
+  --initial-advertise-peer-urls=https://{{ this_ip }}:2380 \
+  --listen-client-urls=https://{{ this_ip }}:2379 \
+  --advertise-client-urls=https://{{ this_ip }}:2379,https://127.0.0.1:2379 \
+  --initial-cluster-token=k8s-etcd-cluster \
+  --initial-cluster={{ cluster_ep|join(',')|lower }} \
+{%- if salt['grains.get']('add_etcd_node') %}
+  --initial-cluster-state=existing
+{%- else %}
+  --initial-cluster-state=new
+{%- endif %}
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

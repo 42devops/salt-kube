@@ -1,0 +1,39 @@
+###
+# kubernetes system config
+#
+# The following values are used to configure various aspects of all
+# kubernetes services, including
+#
+#   kube-apiserver.service
+#   kube-controller-manager.service
+#   kube-scheduler.service
+#   kubelet.service
+#   kube-proxy.service
+
+# logging to stderr means we get it in the systemd journal
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v={{ pillar['kube_log_level'] }}"
+
+# Should this cluster be allowed to run privileged containers
+KUBE_ALLOW_PRIV="--allow-privileged=true"
+
+KUBE_ENABLE_DAEMONSETS=true
+
+# How the controller-manager, scheduler, and proxy find the apiserver
+# note: we will configure everything with a kubeconfig file
+# KUBE_MASTER=""
+
+# Kubernetes feature gates, by default no feature gate is enabled.
+# Customers can enable feature gates **at their risk** by executing the
+# following command on the admin node:
+#
+#   docker exec $(docker ps | grep velum-dashboard | awk {'print $1'}) entrypoint.sh bundle exec rails runner "Pillar.apply(kubernetes_feature_gates: 'DevicePlugins=true')"
+#
+# This will set the KUBE_FEATURE_GATES flag to `DevicePlugins=true`
+{%- if salt.caasp_pillar.get('kubernetes:feature_gates', '') %}
+KUBE_FEATURE_GATES="--feature-gates={{ pillar['kubernetes']['feature_gates'] }}"
+{%- else %}
+KUBE_FEATURE_GATES=""
+{% endif %}

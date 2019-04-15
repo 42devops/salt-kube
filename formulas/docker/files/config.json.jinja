@@ -1,0 +1,13 @@
+{%- set registries           = salt.caasp_pillar.get('registries') -%}
+{
+	{% if registries|length > 0 -%}
+	"auths": {
+		{%- for registry in registries %}
+        "{{- registry["url"] -}}": {
+			"auth": "{{ registry["auth"] | base64_encode }}"
+		}
+        {{- "," if not loop.last else ""}}
+        {%- endfor %}
+	}
+	{%- endif %}
+}

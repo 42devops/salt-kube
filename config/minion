@@ -1,0 +1,5 @@
+master: salt
+log_level: warning
+startup_states: highstate
+multiprocessing: false
+saltenv: local

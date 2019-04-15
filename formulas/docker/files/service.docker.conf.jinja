@@ -1,0 +1,26 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.com
+After=network.target flannel.service
+{% if salt.caasp_pillar.get('cni:plugin') == 'flannel' %}
+Requires=flannel.service
+{% endif %}
+
+[Service]
+Environment="PATH=/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+{%- if salt.caasp_pillar.get('cni:plugin') == 'flannel' %}
+EnvironmentFile=-/run/flannel/docker
+{%- endif %}
+ExecStart=/usr/local/bin/dockerd --log-level=error $DOCKER_NETWORK_OPTIONS --selinux-enabled=false
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+Delegate=yes
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

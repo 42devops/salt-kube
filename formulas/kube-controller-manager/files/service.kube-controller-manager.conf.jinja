@@ -1,0 +1,30 @@
+{%- set this_nodename = grains['nodename'] %}
+{%- set netiface = salt.caasp_pillar.get('hw:netiface') -%}
+{%- set this_ip = grains['ip4_interfaces'][netiface][0] -%}
+{%-  set service_cluster_ip_range = salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:services_cidr') -%}
+{%-  set cluster_cidr = salt.caasp_pillar.get('kubernetes:lookup:kube-controller-manager:cluster_cidr') -%}
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-controller-manager \
+  --address=0.0.0.0 \
+  --allocate-node-cidrs=true \
+  --cluster-cidr={{ cluster_cidr }} \
+  --cluster-name=kubernetes \
+  --cluster-signing-cert-file={{ pillar['ssl']['ca_file'] }} \
+  --cluster-signing-key-file={{ pillar['ssl']['key_file'] }} \
+  --kubeconfig={{ pillar['paths']['kube_controller_manager_config'] }} \
+  --leader-elect=true \
+  --root-ca-file={{ pillar['ssl']['ca_file'] }} \
+  --service-account-private-key-file={{ pillar['paths']['service_account_key'] }} \
+  --service-cluster-ip-range= {{ service_cluster_ip_range }} \
+  --use-service-account-credentials=true \
+  --horizontal-pod-autoscaler-use-rest-clients=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

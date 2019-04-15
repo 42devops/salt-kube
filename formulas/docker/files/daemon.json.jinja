@@ -1,0 +1,21 @@
+{%- set storagedriver = salt.caasp_pillar.get('docker:daemon:storage-driver') -%}
+{%- set logdriver = salt.caasp_pillar.get('docker:daemon:log-driver') -%}
+{%- set logmaxsize = salt.caasp_pillar.get('docker:daemon:log-max-size') -%}
+{%- set registries           = salt.caasp_pillar.get('registries') -%}
+{
+  {% if registries|length > 0 -%}
+  "insecure-registries": [
+        {%- for registry in registries %}
+        "{{- registry["url"] -}}"
+        {{- "," if not loop.last else ""}}
+        {%- endfor %}
+  ],
+  {%- endif %}
+  "storage-driver": "{{storagedriver}}",
+  {%- if logmaxsize|length > 0 %}
+  "log-opts": {
+    "max-size": "{{ logmaxsize }}"
+  },
+  {%- endif %}
+  "log-driver": "{{logdriver}}"
+}

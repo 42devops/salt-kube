@@ -1,0 +1,12 @@
+.vagrant
+dist/
+grains
+.idea
+*.tar.gz
+*.tgz
+*.zip
+.tox
+tests/binaries
+tags
+.vscode
+*.lock

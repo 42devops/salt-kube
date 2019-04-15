@@ -1,0 +1,6 @@
+file:
+  /etc/motd:
+    exists: true
+    owner: root
+    group: root
+    mode: '0644'

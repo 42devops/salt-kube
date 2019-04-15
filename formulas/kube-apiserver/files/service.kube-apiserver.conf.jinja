@@ -1,0 +1,57 @@
+{%- set this_nodename = grains['nodename'] %}
+{%- set netiface = salt.caasp_pillar.get('hw:netiface') -%}
+{%- set this_ip = grains['ip4_interfaces'][netiface][0] -%}
+{%-  set service_cluster_ip_range = salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:services_cidr') -%}
+{%- set cluster_etcd = [] -%}
+{%- for server, addr in salt['mine.get']('roles:etcd', 'network.ip_addrs', tgt_type='grain').items() -%}
+{%- if cluster_etcd.append("https://" + addr[0] + ":2379") -%}
+{%- endif -%}
+{%- endfor %}
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-apiserver \
+  --advertise-address={{ this_ip }} \
+  --allow-privileged=true \
+  --apiserver-count=3 \
+  --audit-log-maxage=30 \
+  --audit-log-maxbackup=3 \
+  --audit-log-maxsize=100 \
+  --audit-log-path=/var/log/audit.log \
+  --audit-policy-file=/var/lib/kubernetes/audit-policy-minimal.yaml \
+  --authorization-mode=Node,RBAC \
+  --bind-address=0.0.0.0 \
+  --client-ca-file={{ pillar['ssl']['ca_file'] }} \
+  --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
+  --enable-swagger-ui=true \
+  --etcd-cafile={{ pillar['ssl']['ca_file'] }} \
+  --etcd-certfile={{ pillar['ssl']['crt_file'] }} \
+  --etcd-keyfile={{ pillar['ssl']['key_file'] }} \
+  --etcd-servers={{ cluster_etcd|join(',') }} \
+  --event-ttl=24h \
+  --experimental-encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \
+  --kubelet-certificate-authority={{ pillar['ssl']['ca_file'] }} \
+  --kubelet-client-certificate={{ pillar['ssl']['crt_file'] }} \
+  --kubelet-client-key={{ pillar['ssl']['key_file'] }} \
+  --kubelet-https=true \
+  --runtime-config=api/all \
+  --service-account-key-file={{ pillar['paths']['service_account_key'] }} \
+  --service-cluster-ip-range={{ service_cluster_ip_range }} \
+  --service-node-port-range=30000-32767 \
+  --tls-cert-file={{ pillar['ssl']['crt_file'] }} \
+  --tls-private-key-file={{ pillar['ssl']['key_file'] }} \
+  --requestheader-client-ca-file={{ pillar['ssl']['ca_file'] }} \
+  --requestheader-extra-headers-prefix="X-Remote-Extra-" \
+  --requestheader-group-headers=X-Remote-Group \
+  --requestheader-username-headers=X-Remote-User \
+  --proxy-client-cert-file={{ pillar['ssl']['crt_file'] }} \
+  --proxy-client-key-file={{ pillar['ssl']['key_file'] }} \
+  --enable-aggregator-routing=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+[Install]
+WantedBy=multi-user.target

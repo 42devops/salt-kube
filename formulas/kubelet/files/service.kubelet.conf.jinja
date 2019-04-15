@@ -1,0 +1,27 @@
+{%- set this_nodename = grains['nodename'] %}
+{%- set netiface = salt.caasp_pillar.get('hw:netiface') -%}
+{%- set this_ip = grains['ip4_interfaces'][netiface][0] -%}
+{%-  set pod_infra_container_image = salt.caasp_pillar.get('kubernetes:lookup:kubelet:pod_infra_container_image', False) -%}
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \
+  --config=/etc/kubernetes/kubelet-config.yaml \
+{%- if salt.caasp_pillar.get('kubernetes:lookup:kubelet:pod_infra_container_image')  %}
+  --pod-infra-container-image={{ pod_infra_container_image }} \
+{%- endif %}
+  --alsologtostderr=true \
+  --logtostderr=false \
+  --image-pull-progress-deadline=2m \
+  --kubeconfig={{ pillar['paths']['kubelet_config'] }} \
+  --register-node=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

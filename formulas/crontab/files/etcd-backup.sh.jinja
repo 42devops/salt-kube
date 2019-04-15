@@ -1,0 +1,39 @@
+
+{%- set main_dir = '/opt/etcd' %}
+{%- set cluster_etcd = [] -%}
+{%- for server, addr in salt['mine.get']('roles:etcd', 'network.ip_addrs', tgt_type='grain').items() -%}
+{%- do cluster_etcd.append("https://" + addr[0] + ":2379") -%}
+{%- endfor %}
+
+#!/bin/bash
+
+set -e
+
+#--------------------------------
+
+BACKUP_DIR={{ main_dir }}
+BACKUP_NAME=`date '+%Y%m%d%H%M%S'`.snapshot.db
+
+KEY={{ pillar['ssl']['key_file'] }}
+CERT={{ pillar['ssl']['crt_file'] }}
+CACERT={{ pillar['ssl']['ca_file'] }}
+ENDPOINTS={{ cluster_etcd|join(',') }}
+
+#--------------------------------
+
+ETCDCTL_API=3 \
+/usr/local/bin/etcdctl \
+--endpoints=$ENDPOINTS \
+--cacert=$CACERT \
+--cert=$CERT \
+--key=$KEY \
+snapshot save \
+$BACKUP_DIR/$BACKUP_NAME
+
+#--------------------------------
+
+find {{ main_dir }}/*.snapshot.db -ctime +7 -exec rm -r  {} \;
+
+#--------------------------------
+
+exit 0

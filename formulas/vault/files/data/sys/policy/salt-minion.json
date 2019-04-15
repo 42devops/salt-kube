@@ -1,0 +1,3 @@
+{
+	"rules": "path \"postgresql/creds/readonly\" {\n  capabilities = [\"read\"]\n}"
+}

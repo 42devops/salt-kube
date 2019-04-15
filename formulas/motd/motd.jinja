@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+Welcome to Salt_Kube {{ salt['grains.get']('environment', 'UNKNOW') |upper }} ENVIRONMENT~~
+{% set netiface = salt.caasp_pillar.get('hw:netiface') %}
+{%- set this_ip = grains['ip4_interfaces'][netiface][0] %}
+
+ENVIRONMENT:   {{ salt['grains.get']('environment', 'UNKNOW') |upper }}
+Machine ID:    {{ salt['grains.get']('machine_id', 'ERROR') }}
+HOSTNAME:      {{ salt['grains.get']('nodename', 'ERROR') }}
+IP:            {{ this_ip }}
+
+OS:            {{ grains['osfullname'] }} {{ grains['osrelease'] }} "{{ grains['oscodename']|capitalize }}"
+Kernel:        {{ grains['kernelrelease'] }}
+Memory:        {{ grains['mem_total'] }} MB
+CPU:           {{ grains['num_cpus'] }} x {{ grains['cpu_model'] }}
+Salt Version:  {{ grains['saltversion'] }}
+
+
+Container Runtime: {{ salt['pillar.get']('cri:{}:description'.format(salt.caasp_cri.cri_name()), 'unknown') }}
+
+The Salt Roles of this node are:
+{%- for role in salt['grains.get']('roles', []) %}
+  - {{role}}
+{%- endfor %}
+
+------------------------------------------------------------------------------

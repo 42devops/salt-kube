@@ -1,0 +1,32 @@
+auto_accept: True
+log_level: info
+state_output: mixed
+worker_threads: 20
+zmq_backlog: 2000
+timeout: 20
+file_roots:
+  prod:
+    - /srv/salt/prod
+    - /srv/salt/prod/roles
+    - /srv/formulas
+  uat:
+    - /srv/salt/uat
+    - /srv/salt/uat/roles
+    - /srv/formulas
+  int:
+    - /srv/salt/int
+    - /srv/salt/int/roles
+    - /srv/formulas
+  local:
+    - /srv/salt/local
+    - /srv/salt/local/roles
+    - /srv/formulas
+pillar_roots:
+  prod:
+    - /srv/pillar/prod
+  uat:
+    - /srv/pillar/uat
+  int:
+    - /srv/pillar/int
+  local:
+    - /srv/pillar/local
