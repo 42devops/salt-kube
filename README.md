@@ -18,7 +18,7 @@ make download
 make init
 ```
 
-### login
+### login local env to test
 
 ```
 vagrant ssh salt
@@ -27,6 +27,8 @@ kubectl get no
 ```
 
 ### other notes
+
+init cluster manual by command
 
 ```bash
 vagrant up
