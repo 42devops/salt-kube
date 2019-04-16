@@ -4,3 +4,4 @@ include:
   - kube-apiserver
   - kube-controller-manager
   - kube-scheduler
+  - kube-addons.coredns

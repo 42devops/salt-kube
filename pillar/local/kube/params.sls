@@ -1,6 +1,6 @@
 kubernetes:
   lookup:
-    version: v1.13.4
+    version: v1.14.1
     local_install: True
     package_url: "https://storage.googleapis.com/kubernetes-release/release"
     kube-apiserver:
@@ -53,7 +53,7 @@ kubernetes:
       - admissionregistration.k8s.io/v1alpha1
       - batch/v2alpha1
     admission_control:
-      - 'Initializers'
+      # - 'Initializers'
       - 'NamespaceLifecycle'
       - 'LimitRanger'
       - 'ServiceAccount'
