@@ -10,7 +10,7 @@
 - Kubernetes v1.14.1
 - Vault 1.1.1
 
-## How to develop
+## How to quickstart on local
 
 - install `git` and `vagrant`.
 - clone repo and download binaries package
