@@ -3,11 +3,11 @@ GIT_SHA = $(shell git log --pretty=oneline | head -n1 | cut -c1-8)
 PACKAGE = "salt_config-$(GIT_SHA).tgz"
 SHASUM = $(shell test `uname` == 'Darwin' && echo shasum -a 256 || echo sha256sum)
 env := "local"
-KUBE_VERSION := "1.13.4"
+KUBE_VERSION := "1.14.1"
 DOCKER_VERSION := "18.06.3"
 FLANNEL_VERSION := "0.11.0"
 ETCD_VERSION := "3.3.12"
-VAULT_VERSION := "1.0.3"
+VAULT_VERSION := "1.1.1"
 
 
 all: formulas
@@ -28,10 +28,10 @@ all: formulas
 	@rsync -a tests/binaries/kubectl dist/formulas/kubectl/files
 	@rsync -a tests/binaries/kube-proxy dist/formulas/kube-proxy/files
 	@rsync -a tests/binaries/kubelet dist/formulas/kubelet/files
-	@rsync -a tests/binaries/etcd-v3.3.12-linux-amd64.tar.gz dist/formulas/etcd/files
-	@rsync -a tests/binaries/docker-18.06.3-ce.tgz dist/formulas/docker/files
-	@rsync -a tests/binaries/flannel-v0.11.0-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
-	@rsync -a tests/binaries/vault_1.0.3_linux_amd64.zip dist/formulas/vault/files
+	@rsync -a tests/binaries/etcd-v$(ETCD_VERSION)-linux-amd64.tar.gz dist/formulas/etcd/files
+	@rsync -a tests/binaries/docker-$(DOCKER_VERSION)-ce.tgz dist/formulas/docker/files
+	@rsync -a tests/binaries/flannel-v$(FLANNEL_VERSION)-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
+	@rsync -a tests/binaries/vault_$(VAULT_VERSION)_linux_amd64.zip dist/formulas/vault/files
 	@echo $(GIT_SHA) > ./dist/SHA
 	@find ./dist -type f | sort | xargs $(SHASUM) | sed "s;./dist;/srv;" > MANIFEST
 	@$(SHASUM) MANIFEST | cut -d\  -f1 > MANIFEST.sha256
@@ -45,8 +45,9 @@ localinstall:
 	@cp -f tests/binaries/kubectl dist/formulas/kubectl/files
 	@cp -f tests/binaries/kube-proxy dist/formulas/kube-proxy/files
 	@cp -f tests/binaries/kubelet dist/formulas/kubelet/files
-	@cp -f tests/binaries/etcd-v3.3.12-linux-amd64.tar.gz dist/formulas/etcd/files
-	@cp -f tests/binaries/vault_1.0.3_linux_amd64.zip dist/formulas/vault/files
+	@cp -f tests/binaries/etcd-v$(ETCD_VERSION)-linux-amd64.tar.gz dist/formulas/etcd/files
+	@cp -f tests/binaries/vault_$(VAULT_VERSION)_linux_amd64.zip dist/formulas/vault/files
+	@cp -f tests/binaries/flannel-v$(FLANNEL_VERSION)-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
 lint:
 	@tests/lint.sh
 

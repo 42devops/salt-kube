@@ -69,8 +69,9 @@ grep -q "^${KUBE_VERSION}\$" binaries/.kubernetes 2>/dev/null || {
 }
 
 # vault
-VAULT_VERSION=${VAULT_VERSION:-"1.0.3"}
+VAULT_VERSION=${VAULT_VERSION:-"1.1.1"}
 VAULT="vault_${VAULT_VERSION}_linux_amd64"
+echo "Prepare vault ${VAULT_VERSION} release ..."
 grep -q "^${VAULT_VERSION}\$" binaries/.vault 2>/dev/null || {
   curl -L https://releases.hashicorp.com/vault/${VAULT_VERSION}/${VAULT}.zip -o binaries/${VAULT}.zip
   echo ${VAULT_VERSION} > binaries/.vault

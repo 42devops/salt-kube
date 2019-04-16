@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+# vim: ft=sls syntax=yaml softtabstop=2 tabstop=2 shiftwidth=2 expandtab autoindent
+
+systemd:
+  service:
+    path: /etc/systemd/system/vault.service
+    source: salt://vault/files/vault.service.j2
+
+upstart:
+  service:
+    path: /etc/init/vault.conf
+    source: salt://vault/files/vault.conf.j2

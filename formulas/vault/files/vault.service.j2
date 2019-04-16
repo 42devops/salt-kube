@@ -1,0 +1,18 @@
+{%- from "vault/map.jinja" import vault with context -%}
+[Unit]
+Description=Vault secret management tool
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+PIDFile=/var/run/vault.pid
+ExecStart=/usr/local/bin/vault server {% if vault.dev_mode %} -dev {% else %} -config=/etc/vault/conf.d {% endif %}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+Restart=on-failure
+RestartSec=42s
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

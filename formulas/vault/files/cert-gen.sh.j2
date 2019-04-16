@@ -1,0 +1,133 @@
+{% from "vault/map.jinja" import vault with context -%}
+#!/usr/bin/env bash
+
+###
+ # Check for root name.
+ ##
+root=$1
+shift
+if [[ -z "$root" ]]; then
+  echo "you must pass 2 arguments; first for root name, second for child name"
+  exit
+fi
+
+###
+ # Check for child name
+ ##
+child=$1
+if [[ -z "$child" ]]; then
+  echo "you must pass 2 arguments; first for root name ($root), second for child name"
+  exit
+fi
+
+###
+ # Use the child name as the password because Java Keystore requires it
+ ##
+pw="$child"
+
+###
+ # Generate the root certificate
+ ##
+root_key="$root.key"
+root_pem="$root.pem"
+root_key_nopass="$root-nopass.key"
+root_subj="/C={{ vault.self_signed_cert.country }}/ST={{ vault.self_signed_cert.state }}/L={{ vault.self_signed_cert.city }}/O={{ vault.self_signed_cert.org }}/OU={{ vault.self_signed_cert.org_unit }}/CN=$root\_ca"
+root_p12="$root.p12"
+
+###
+ # Generate the root private key
+ ##
+if [[ -e "$root_key" ]]; then
+  echo "$root_key already exits"
+else
+  echo "generate $root_key"
+  openssl genrsa -aes256 -passout pass:"$pw" -out "$root_key" 4096
+fi
+
+###
+ # Genereate the the root privacy enhanced email (PEM)
+ ##
+if [[ -e "$root_pem" ]]; then
+  echo "$root_pem already exits"
+else
+  echo "generate $root_pem"
+  openssl req -new -x509 -days 3652 -key "$root_key" -out "$root_pem" -passin pass:"$pw" -subj "$root_subj"
+fi
+
+###
+ # Generate the root public key (P12)
+ ##
+if [[ -e "$root_p12" ]]; then
+  echo "$root_p12 already exits"
+else
+  echo "generate $root_p12"
+  openssl pkcs12 -export -in "$root_pem" -inkey "$root_key" -passin pass:"$pw" -passout pass:"$pw" -out "$root_p12" \
+    -name "$root"
+fi
+
+###
+ # Generate the child certificate
+ ##
+child_name="${root}_${child}"
+child_key="$child_name.key"
+child_pem="$child_name.pem"
+child_csr="$child_name.csr"
+child_subj="/C={{ vault.self_signed_cert.country }}/ST={{ vault.self_signed_cert.state }}/L={{ vault.self_signed_cert.city }}/O={{ vault.self_signed_cert.org }}/OU={{ vault.self_signed_cert.org_unit }}/CN=$child_name"
+child_p12="$child_name.p12"
+child_jks="$child_name.jks"
+
+###
+ # Generate the child private key
+ ##
+if [[ -e "$child_key" ]]; then
+  echo "$child_key already exits"
+else
+  echo "generate $child_key"
+  openssl genrsa -aes256 -passout pass:"$pw" -out "$child_key" 4096
+fi
+
+###
+ # Genereate the the child privacy enhanced email (PEM)
+ ##
+if [[ -e "$child_pem" ]]; then
+  echo "$child_pem already exits"
+else
+  echo "generate $child_csr"
+  openssl req -new -key "$child_key" -passin pass:"$pw" -out "$child_csr" -subj "$child_subj"
+  echo "generate $child_pem"
+  openssl x509 -req -days 36524 -in "$child_csr" -CA "$root_pem" -CAkey "$root_key" -passin pass:"$pw" -set_serial 1 \
+    -out "$child_pem"
+fi
+
+###
+ # Generate the child public key (P12)
+ ##
+if [[ -e "$child_p12" ]]; then
+  echo "$child_p12 already exits"
+else
+  echo "generate $child_p12"
+  openssl pkcs12 -export -in "$child_pem" -inkey "$child_key" -passin pass:"$pw" -passout pass:"$pw" -out "$child_p12" \
+    -certfile "$root_pem" -caname "$root" -name "$child_name"
+fi
+
+###
+ # Generate the Java Keystore (JKS)
+ ##
+if [[ -e "$child_jks" ]]; then
+  echo "$child_jks already exits"
+else
+  keytool="keytool"
+  if [[ -n $(command -v $keytool) ]]; then
+    echo "generate $child_jks with $root trustedCertEntry"
+    $keytool -importcert -trustcacerts -noprompt -file "$root_pem" -destkeystore "$child_jks" -storepass "$pw" \
+      -alias "$root" -v
+    echo "supplement $child_jks with $child PrivateKeyEntry"
+    $keytool -importkeystore -destkeystore "$child_jks" -storepass "$pw" -srckeystore "$child_p12" \
+      -srcstoretype pkcs12 -srcstorepass "$pw" -alias "$child_name" -v
+  else
+    echo "$keytool is not installed"
+  fi
+fi
+
+echo "Generating version of '$root_key' without password as '$root_key_nopass'."
+openssl rsa -in "$root_key" -out "$root_key_nopass" -passin pass:"$pw"

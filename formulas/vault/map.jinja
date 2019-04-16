@@ -1,51 +1,18 @@
-{% set vault = salt.grains.filter_by({
-    'default': {
-        'architecture_dict': {
-            'x86_64': 'amd64',
-            'amd64': 'amd64',
-            'i386': '386',
-            'i686': '386'
-        },
-        'service': 'vault',
-        'ssl_directory': '/etc/salt/ssl',
-        'ssl': {},
-        'config': {
-            'ui': true,
-            'listener': {
-                'tcp': {
-                    'address': '0.0.0.0:8200',
-                    'tls_cert_file': '/etc/pki/minion.crt',
-                    'tls_key_file': '/etc/pki/minion.key'
-                }
-            }
-        },
-        'local_install': true,
-        'source_hash': 'sha1=18464dd6d1fce160ef443f3725860faf86e3c451',
-        'version': '0.11.1',
-        'repo_base_url': 'https://releases.hashicorp.com/vault',
-        'secret_shares': 5,
-        'secret_threshold': 3,
-        'unseal': True,
-        'pgp_keys': [],
-        'keybase_users': []
-    },
-    'Debian': {
-        'module_dependencies': {
-            'pkgs': ['libffi-dev', 'python-dev', 'gcc', 'libssl-dev', 'python', 'curl'],
-            'pip_deps': ['pyopenssl', 'hvac', 'testinfra']
-        }
-    },
-    'RedHat': {
-        'module_dependencies': {
-            'pkgs': ['libffi-devel', 'openssl-devel', 'gcc', 'python-devel', 'curl'],
-            'pip_deps': ['pyopenssl', 'hvac', 'testinfra']
-        }
-    },
-}, grain='os_family', merge=salt.pillar.get('vault:overrides'), base='default') %}
+# -*- coding: utf-8 -*-
+# vim: ft=sls syntax=yaml softtabstop=2 tabstop=2 shiftwidth=2 expandtab autoindent
 
-{% set vault_service = salt.grains.filter_by({
-    'systemd': {
-        'init_file': '/etc/systemd/system/vault.service',
-        'init_source': 'salt://vault/files/vault.service'
-    }
-}, grain='init', merge=salt.pillar.get('vault:service')) %}
+{% import_yaml "vault/defaults.yaml" or {} as defaults %}
+{% import_yaml "vault/osfamilymap.yaml" or {} as osfamilymap %}
+{% import_yaml "vault/initfamilymap.yaml" or {} as initfamilymap %}
+
+{%- set merged_defaults = salt['grains.filter_by'](defaults,
+    default='vault',
+    merge=salt['grains.filter_by'](osfamilymap, grain='os_family',
+      merge=salt['grains.filter_by'](initfamilymap, grain='init',
+        merge=salt['pillar.get']('vault:lookup', default={})
+      )
+    )
+) %}
+
+{#- Merge the vault pillar #}
+{%- set vault = salt['pillar.get']('vault', default=merged_defaults, merge=True) %}

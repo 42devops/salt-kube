@@ -1,5 +1,17 @@
 ## salt-kube Project
 
+## version
+
+- CentOS 7+
+- Saltstack 2018.3.3
+- Etcd v3.3.12
+- Docker 18.0.6-ce
+- Flannel v0.11.0
+- Kubernetes v1.14.1
+- Vault 1.1.1
+
+## How to develop
+
 - install `git` and `vagrant`.
 - clone repo and download binaries package
 - build for env

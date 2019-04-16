@@ -1,0 +1,24 @@
+{%- from "vault/map.jinja" import vault with context -%}
+description "Vault server"
+
+start on (runlevel [345] and started network)
+stop on (runlevel [!345] or stopping network)
+
+respawn
+
+script
+  if [ -f "/etc/service/vault" ]; then
+    . /etc/service/vault
+  fi
+
+  # Make sure to use all our CPUs, because Vault can block a scheduler thread
+  export GOMAXPROCS=`nproc`
+
+  exec /usr/local/bin/vault server \
+{%- if vault.dev_mode %}
+    -dev \
+{% else %}
+    -config="/etc/vault/conf.d/config.json" \
+{% endif -%}
+    >>/var/log/vault.log 2>&1
+end script
