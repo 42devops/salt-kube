@@ -59,7 +59,7 @@ salt-run state.orchestrate orch.kubernetes saltenv=local
 ## TODO
 
 - [ ] Add good README page
-- [ ] CoreDNS addons setup
+- [X] CoreDNS addons setup
 - [ ] Ingress addons setup
 - [ ] Containerd support
 - [ ] Calico network suport
