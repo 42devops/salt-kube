@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
       machine.vm.provider "virtualbox" do |v|
           v.name = name
           if v.name == 'salt'
-            v.customize ["modifyvm", :id, "--memory", 4048]
+            v.customize ["modifyvm", :id, "--memory", 3048]
           else
             v.customize ["modifyvm", :id, "--memory", 2048]
           end

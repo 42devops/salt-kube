@@ -78,6 +78,8 @@ init: all
 	vagrant up
 	vagrant ssh salt -c "sudo salt salt state.sls salt.master"
 	vagrant ssh salt -c "sudo salt \* state.sls salt.minion"
-	vagrant ssh salt -c "sudo salt salt state.sls caserver.initca"
-	vagrant ssh salt -c "sudo salt-run saltutil.sync_all saltenv=$(env)"
-	vagrant ssh salt -c "sudo salt-run state.orchestrate orch.kubernetes saltenv=$(env) -l debug"
+	vagrant ssh salt -c "sudo salt salt state.sls caserver"
+	sleep 10
+	vagrant ssh salt -c "sudo salt \* mine.update"
+	sleep 10
+	vagrant ssh salt -c "sudo salt \* state.apply -l debug"
