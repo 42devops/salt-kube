@@ -87,3 +87,5 @@ init: all
 	vagrant ssh salt -c "sudo salt \* mine.update"
 	sleep 10
 	vagrant ssh salt -c "sudo salt \* state.apply -l debug"
+	sleep 20
+	vagrant ssh salt -c "sudo salt \* state.apply -l debug"
