@@ -77,7 +77,11 @@ download:
 init: all
 	vagrant up
 	vagrant ssh salt -c "sudo salt salt state.sls salt.master"
+	sleep 20
 	vagrant ssh salt -c "sudo salt \* state.sls salt.minion"
+	sleep 20
+	vagrant ssh salt -c "sudo salt salt state.sls caserver.initca"
+	sleep 10
 	vagrant ssh salt -c "sudo salt salt state.sls caserver"
 	sleep 10
 	vagrant ssh salt -c "sudo salt \* mine.update"

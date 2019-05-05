@@ -15,8 +15,8 @@
     - retry:
         attempts: 10
         interval: 1
-#    - require:
-#      - {{ pillar['paths']['kubeconfig'] }}
+    - require:
+      - {{ pillar['paths']['kubeconfig'] }}
 {%- if 'require' in kwargs %}
   {%- for r in kwargs['require'] %}
       - {{ r }}
@@ -96,6 +96,7 @@ wait-for-{{ deployment }}-deployment:
         availableReplicas=$(kubectl --request-timeout=1m --kubeconfig={{ pillar['paths']['kubeconfig'] }} get deployment {{ deployment }} --namespace={{ namespace }} --template {{ '{{.status.availableReplicas}}' }})
         updatedReplicas=$(kubectl --request-timeout=1m --kubeconfig={{ pillar['paths']['kubeconfig'] }} get deployment {{ deployment }} --namespace={{ namespace }} --template {{ '{{.status.updatedReplicas}}' }})
         [ "$readyReplicas" == "$desiredReplicas" ] && [ "$availableReplicas" == "$desiredReplicas" ] && [ "$updatedReplicas" == "$desiredReplicas" ]
+    - timeout: {{ timeout }}
     - retry:
         attempts: {{ timeout }}
         interval: 1

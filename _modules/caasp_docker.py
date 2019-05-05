@@ -13,7 +13,7 @@ def _get_hostname_and_port(url, default_port=None):
         hostname = parsed.hostname
         port = parsed.port
     else:
-        splitted_url = url.split(":")
+        splitted_url = url.split(':')
         hostname = splitted_url[0]
         if len(splitted_url) > 1:
             port = int(splitted_url[1])
@@ -21,26 +21,26 @@ def _get_hostname_and_port(url, default_port=None):
             port = None
 
     res = (hostname, port or default_port)
-    __utils__["caasp_log.debug"]("%s parsed as %s", url, res)
+    __utils__['caasp_log.debug']("%s parsed as %s", url, res)
     return res
 
 
 def get_registries_certs(lst, default_port=5000):
-    """
+    '''
     Given a list of "valid" items, return a dictionay of
     "<HOST>[:<PORT>]" -> <CERT>
     "valid" items must be get'able objects, with attributes
     "url", "cert" and (optional) "mirrors"
     "url"s can be [<PROTO>://]<HOST>[:<PORT>]
-    """
+    '''
     certs = {}
 
-    __utils__["caasp_log.debug"]("Finding certificates in: %s", lst)
+    __utils__['caasp_log.debug']('Finding certificates in: %s', lst)
     for registry in lst:
         try:
-            url = registry.get("url")
+            url = registry.get('url')
 
-            cert = registry.get("cert", "")
+            cert = registry.get('cert', '')
             if cert:
 
                 # parse the name as an URL or "host:port", and return <HOST>[:<PORT>]
@@ -49,7 +49,7 @@ def get_registries_certs(lst, default_port=5000):
                 if port:
                     host_port += ":" + str(port)
 
-                __utils__["caasp_log.debug"]("Adding certificate for: %s", host_port)
+                __utils__['caasp_log.debug']('Adding certificate for: %s', host_port)
                 certs[host_port] = cert
 
                 if port:
@@ -62,31 +62,28 @@ def get_registries_certs(lst, default_port=5000):
                         # as he/she could just access "docker pull my-registry/some/image",
                         # and Docker would fail to find "my-registry/ca.crt"
                         name = hostname
-                        __utils__["caasp_log.debug"](
-                            'Using default port: adding certificate for "%s" too', name
-                        )
+                        __utils__['caasp_log.debug'](
+                            'Using default port: adding certificate for "%s" too', name)
                         certs[name] = cert
                 else:
                     # the same happens if the user introduced a certificate for
                     # "my-registry": we must fix the "docker pull my-registry:5000/some/image" case...
-                    name = hostname + ":" + str(default_port)
-                    __utils__["caasp_log.debug"](
-                        'Adding certificate for default port, "%s", too', name
-                    )
+                    name = hostname + ':' + str(default_port)
+                    __utils__['caasp_log.debug'](
+                        'Adding certificate for default port, "%s", too', name)
                     certs[name] = cert
 
         except Exception as e:
-            __utils__["caasp_log.error"]("Could not parse certificate: %s", e)
+            __utils__['caasp_log.error']('Could not parse certificate: %s', e)
 
         try:
-            mirrors = registry.get("mirrors", [])
+            mirrors = registry.get('mirrors', [])
             if mirrors:
-                __utils__["caasp_log.debug"](
-                    "Looking recursively for certificates in mirrors"
-                )
-                certs_mirrors = get_registries_certs(mirrors, default_port=default_port)
+                __utils__['caasp_log.debug']('Looking recursively for certificates in mirrors')
+                certs_mirrors = get_registries_certs(mirrors,
+                                                     default_port=default_port)
                 certs.update(certs_mirrors)
         except Exception as e:
-            __utils__["caasp_log.error"]("Could not parse mirrors: %s", e)
+            __utils__['caasp_log.error']('Could not parse mirrors: %s', e)
 
     return certs
