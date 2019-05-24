@@ -5,6 +5,8 @@ Documentation=https://github.com/kubernetes/kubernetes
 [Service]
 ExecStart=/usr/local/bin/kube-scheduler \
   --config=/etc/kubernetes/kube-scheduler.yaml \
+  --profiling=false \
+  --skip-headers \
   --v=2
 Restart=on-failure
 RestartSec=5

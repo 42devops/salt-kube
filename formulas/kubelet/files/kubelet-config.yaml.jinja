@@ -5,9 +5,12 @@ syncFrequency: 1m0s
 fileCheckFrequency: 20s
 httpCheckFrequency: 20s
 address: 0.0.0.0
+readOnlyPort: 0
 port: {{ pillar['kubernetes']['lookup']['kubelet']['port'] }}
 tlsCertFile: "{{ pillar['ssl']['kubelet_crt'] }}"
 tlsPrivateKeyFile: "{{ pillar['ssl']['kubelet_key'] }}"
+TLSCipherSuites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
+rotateCertificates: true
 authentication:
   x509:
     clientCAFile: "{{ pillar['ssl']['ca_file'] }}"
@@ -33,6 +36,7 @@ cgroupDriver: cgroupfs
 cpuManagerPolicy: none
 cpuManagerReconcilePeriod: 10s
 runtimeRequestTimeout: 2m0s
+streamingConnectionIdleTimeout: 5m0s
 maxPods: 110
 podPidsLimit: -1
 resolvConf: "/etc/resolv.conf"
@@ -52,6 +56,7 @@ iptablesMasqueradeBit: 14
 iptablesDropBit: 15
 failSwapOn: true
 containerLogMaxSize: 10Mi
+eventRecordQPS: 0
 containerLogMaxFiles: 5
 systemReservedCgroup: system
 kubeReservedCgroup: podruntime.slice

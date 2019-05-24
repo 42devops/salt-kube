@@ -19,3 +19,18 @@ kube-scheduler-config:
         user: 'default-admin'
         client_certificate: {{ pillar['ssl']['kube_scheduler_crt'] }}
         client_key: {{ pillar['ssl']['kube_scheduler_key'] }}
+
+
+# Wait for the kube-scheduler to be healthy.
+kube-scheduler-health-check:
+  caasp_retriable.retry:
+    - target:     caasp_http.wait_for_successful_query
+    - name:       http://localhost:10251/healthz
+    - wait_for:   10
+    - retry:
+        attempts: 3
+    - status:     200
+    - opts:
+        http_request_timeout: 10
+    - onchanges:
+        - service: kube-scheduler

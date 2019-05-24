@@ -6,7 +6,7 @@
   {%- set altNames = [
     "DNS: " + grains['nodename'], "DNS: " + grains['nodename'] + "." + pillar['internal_infra_domain'],
     "DNS: " + grains['machine_id'], "DNS: " + grains['machine_id'] + "." + pillar['internal_infra_domain'],
-    "IP: " + this_ip, "IP: 127.0.0.1", "IP: " + salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:cluster_ip'),
+    "IP: " + this_ip, "DNS: localhost", "IP: 127.0.0.1", "IP: " + salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:cluster_ip'),
     "IP: " + salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:PUBLIC_ADDRESS'),
     "IP: " + salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:extra_ips','127.0.0.1')
   ] -%}
@@ -30,6 +30,9 @@
   {%- set names_lst = ["kubernetes",
                        "kubernetes.default",
                        "kubernetes.default.svc",
+                       "kubernetes.default.svc.cluster",
+                       "kubernetes.default.svc.cluster.local",
+                       "localhost",
                        "api",
                        "api." + pillar['internal_infra_domain'],
                        salt.caasp_pillar.get('kubernetes:lookup:kube-apiserver:external_fqdn'),

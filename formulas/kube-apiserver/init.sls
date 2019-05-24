@@ -16,9 +16,9 @@ kube-apiserver-wait-port-6443:
     - retry:
         attempts: 3
     - ca_bundle:  {{ pillar['ssl']['ca_file'] }}
-    - status:     200
+    - status:     401
     - opts:
-        http_request_timeout: 30
+        http_request_timeout: 10
     - watch:
       - service: kube-apiserver
 

@@ -18,7 +18,9 @@ ExecStart=/usr/local/bin/kubelet \
   --logtostderr=false \
   --image-pull-progress-deadline=2m \
   --kubeconfig={{ pillar['paths']['kubelet_config'] }} \
+  --anonymous-auth=false \
   --register-node=true \
+  --feature-gates=RotateKubeletServerCertificate=true \
   --v=2
 Restart=on-failure
 RestartSec=5
