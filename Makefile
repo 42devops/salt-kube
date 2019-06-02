@@ -3,7 +3,7 @@ GIT_SHA = $(shell git log --pretty=oneline | head -n1 | cut -c1-8)
 PACKAGE = "salt_config-$(GIT_SHA).tgz"
 SHASUM = $(shell test `uname` == 'Darwin' && echo shasum -a 256 || echo sha256sum)
 env := "local"
-KUBE_VERSION := "1.14.1"
+KUBE_VERSION := "1.14.2"
 DOCKER_VERSION := "18.06.3"
 FLANNEL_VERSION := "0.11.0"
 ETCD_VERSION := "3.3.12"
