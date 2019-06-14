@@ -1,3 +1,4 @@
+{% if salt.caasp_pillar.get('cni:plugin') == 'flannel' %}
 {% set etcd_networks_keys = salt.caasp_pillar.get('kubernetes:lookup:kube-controller-manager:cluster_cidr') %}
 {% set key_domain = pillar['internal_infra_domain'] %}
 {% if 'etcd' in salt['grains.get']('roles', []) %}
@@ -24,4 +25,5 @@ setting_etcdkeys:
           --key-file  {{ pillar['ssl']['key_file'] }} \
           --endpoints  {{ cluster_ep|join(',') }} \
           get /{{ key_domain }}/network/config
+{% endif %}
 {% endif %}

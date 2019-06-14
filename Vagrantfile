@@ -16,7 +16,6 @@ cat > /etc/hosts << EOF
 EOF
 swapoff -a
 sed -i '/swap/d' /etc/fstab
-yum update -y
 
 
 if [[ $(hostname -s) == 'salt' ]]; then
@@ -55,13 +54,14 @@ multiprocessing: false
 saltenv: local
 EOFS
 systemctl restart salt-minion
-yum install https://forensics.cert.org/centos/cert/7/x86_64/python-M2Crypto-0.26.0-0.x86_64.rpm -y
+# yum install https://forensics.cert.org/centos/cert/7/x86_64/python-M2Crypto-0.26.0-0.x86_64.rpm -y
+sudo apt install python-m2crypto -y
 SCRIPT
 
 Vagrant.configure("2") do |config|
   hosts.each do |name, ip|
     config.vm.define name do |machine|
-      machine.vm.box = "bento/centos-7.6"
+      machine.vm.box = "bento/ubuntu-18.04"
       machine.vm.box_check_update = false
       machine.ssh.insert_key = false
       machine.vm.hostname = name

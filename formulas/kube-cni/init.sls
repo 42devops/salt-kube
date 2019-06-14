@@ -9,3 +9,9 @@
 include:
   - kube-cni/flannel
 {% endif %}
+
+{% if plugin == "cilium" %}
+include:
+  - kube-cni/cni
+  - kube-cni/cilium
+{% endif %}

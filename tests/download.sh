@@ -77,5 +77,17 @@ grep -q "^${VAULT_VERSION}\$" binaries/.vault 2>/dev/null || {
   echo ${VAULT_VERSION} > binaries/.vault
 }
 
+# cni-plugins
+
+CNI_PLUGINS_VERSION=${CNI_PLUGINS_VERSION:-"v0.8.1"}
+CNI_PLUGINS="cni-plugins-linux-amd64-${CNI_PLUGINS_VERSION}"
+echo "Prepare CNI_PLUGINS ${CNI_PLUGINS_VERSION} release ..."
+grep -q "^${CNI_PLUGINS_VERSION}\$" binaries/.CNI_PLUGINS 2>/dev/null || {
+  curl -L https://github.com/containernetworking/plugins/releases/download/${CNI_PLUGINS_VERSION}/${CNI_PLUGINS}.tgz -o binaries/${CNI_PLUGINS}.tgz
+  echo ${CNI_PLUGINS_VERSION} > binaries/.cni-plugins
+}
+
+
+
 echo "Done! All your binaries locate in tests/binaries directory"
 popd

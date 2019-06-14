@@ -89,12 +89,33 @@ paths:
 kube_log_level:   '2'
 
 # CNI network configuration
+#  plugin: ['flannel', 'cilium']
+# cni:
+#   plugin: 'flannel'
+#   version: 'v0.11.0'
+#   hash_sha256: '136e859d5e5239d12effe312d599c3978f94d1b6ecff6bd18695cf022030f93a'
+#   local_install: True
+#   healthz_port: '10290'
+
 cni:
-  plugin: 'flannel'
-  version: 'v0.11.0'
-  hash_sha256: '136e859d5e5239d12effe312d599c3978f94d1b6ecff6bd18695cf022030f93a'
-  local_install: True
-  healthz_port: '10290'
+  plugin: 'cilium'
+  cilium_version: 'v1.3.0'
+  cilium_debug: false
+  cilium_disable_ipv4: false
+  # Etcd SSL dirs
+  cilium_cert_dir: /etc/pki
+  # Cilium Network Policy directory
+  cilium_policy_dir: /etc/kubernetes/policy
+  # Limits for apps
+  cilium_memory_limit: 500M
+  cilium_cpu_limit: 500m
+  cilium_memory_requests: 64M
+  cilium_cpu_requests: 100m
+
+  # Optional features
+  cilium_enable_prometheus: false
+
+
 cri:
   chosen: 'docker'
 #private_regristry: '172.21.3.76:5000'

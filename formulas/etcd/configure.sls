@@ -6,6 +6,7 @@
     - user: etcd
     - group: etcd
     - mode: 644
+    - makedirs: True
     - require:
       - file: /usr/local/bin/etcdctl
       - user: etcd
