@@ -55,7 +55,7 @@ multiprocessing: false
 saltenv: local
 EOFS
 systemctl restart salt-minion
-yum install https://forensics.cert.org/centos/cert/7/x86_64/python-M2Crypto-0.26.0-0.x86_64.rpm -y
+yum install ftp://ftp.pbone.net/mirror/forensics.cert.org/fedora/cert/20/x86_64/python-M2Crypto-0.26.0-0.x86_64.rpm -y
 SCRIPT
 
 Vagrant.configure("2") do |config|
