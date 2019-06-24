@@ -1,4 +1,10 @@
 local:
+  'os:Ubuntu':
+      - match: grain
+      - common.packages_ubuntu
+  'os:(RedHat|CentOS)':
+      - match: grain_pcre
+      - common.packages_centos
   '*':
     - common
     - salt.salt

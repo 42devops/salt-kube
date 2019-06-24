@@ -13,9 +13,6 @@
 #     - refresh: true
 # {% endif %}
 
-ipvsadm:
-  pkg.installed:
-    - install_recommends: False
 
 kubelet-package-download:
   file.managed:

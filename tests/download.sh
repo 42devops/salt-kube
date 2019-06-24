@@ -56,7 +56,7 @@ grep -q "^${ETCD_VERSION}\$" binaries/.etcd 2>/dev/null || {
 }
 
 # k8s
-KUBE_VERSION=${KUBE_VERSION:-"1.14.2"}
+KUBE_VERSION=${KUBE_VERSION:-"1.14.3"}
 echo "Prepare kubernetes ${KUBE_VERSION} release ..."
 grep -q "^${KUBE_VERSION}\$" binaries/.kubernetes 2>/dev/null || {
  curl -L "https://storage.googleapis.com/kubernetes-release/release/v${KUBE_VERSION}/bin/linux/amd64/kube-apiserver" -o binaries/kube-apiserver

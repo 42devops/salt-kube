@@ -111,9 +111,10 @@ cni:
   cilium_cpu_limit: 500m
   cilium_memory_requests: 64M
   cilium_cpu_requests: 100m
-
   # Optional features
   cilium_enable_prometheus: false
+  cni_plugins_version: 'v0.8.1'
+  cni_plugins_hash: 'e9bfc78acd3ae71be77eb8f3e890cc9078a33cc3797703b8ff2fc3077a232252'
 
 
 cri:

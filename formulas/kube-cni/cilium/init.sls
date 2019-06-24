@@ -1,26 +1,29 @@
----
-/sys/fs/bpf:
-  mount.mounted:
-    - devices: bpffs
-    - fstype: bpf
-
-/etc/kubernetes/manifests:
-  file.directory:
-    - mode: 0755
-    - makedirs: True
-
-config-files:
+sys-fs-bpf-files:
   file.managed:
-    - mode: 0755
-    - template: jinja
-    - names:
-      - /etc/kubernetes/manifests/cilium-config.yml:
-        - source: salt://kube-cni/cilium/files/cilium-config.yml.j2
-      - /etc/kubernetes/manifests/cilium-crb.yml:
-        - source: salt://kube-cni/cilium/files/cilium-config.yml.j2
-      - /etc/kubernetes/manifests/cilium-cr.yml:
-        - source: salt://kube-cni/cilium/files/cilium-config.yml.j2
-      - /etc/kubernetes/manifests/cilium-ds.yml:
-        - source: salt://kube-cni/cilium/files/cilium-config.yml.j2
-      - /etc/kubernetes/manifests/cilium-sa.yml:
-        - source: salt://kube-cni/cilium/files/cilium-config.yml.j2
+    - name: "/etc/systemd/system/sys-fs-bpf.mount"
+    - source: salt://kube-cni/cilium/files/sys-fs-bpf.mount
+
+sys-fs-bpf-start:
+  service.running:
+    - name: sys-fs-bpf.mount
+    - enable: True
+    - reload: True
+
+
+{% if 'kube-master' in salt['grains.get']('roles', []) %}
+{% if salt['pillar.get']('cni:plugin', 'flannel').lower() == "cilium" %}
+
+{% from '_macros/kubectl.jinja' import kubectl, kubectl_apply_dir_template with context %}
+
+
+{{ kubectl_apply_dir_template("salt://kube-cni/cilium/files/cilium/",
+                              "/etc/kubernetes/addons/cilium/") }}
+
+{% else %}
+
+dns-dummy:
+  cmd.run:
+    - name: echo "Cilium addon not enabled in config"
+
+{% endif %}
+{% endif %}

@@ -1,11 +1,3 @@
-# python-M2Crypto:
-#   pkg.installed:
-#     - install_recommends: False
-
-python-m2crypto:
-  pkg.installed:
-    - install_recommends: False
-
 /etc/pki:
   file.directory:
     - user: root

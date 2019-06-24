@@ -82,6 +82,8 @@ init: all
 	vagrant ssh salt -c "sudo salt salt state.sls salt.master"
 	sleep 20
 	vagrant ssh salt -c "sudo salt \* state.sls salt.minion"
+	sleep 10
+	vagrant ssh salt -c "sudo salt \* state.sls common"
 	sleep 20
 	vagrant ssh salt -c "sudo salt salt state.sls caserver.initca"
 	sleep 15
