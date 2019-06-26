@@ -16,8 +16,16 @@ cat > /etc/hosts << EOF
 EOF
 swapoff -a
 sed -i '/swap/d' /etc/fstab
-yum update -y
 
+if [  -n "$(uname -a | grep Ubuntu)" ]; then
+  export DEBIAN_FRONTEND=noninteractive
+  export DEBIAN_PRIORITY=critical
+  sudo -E apt-get -qy update
+  sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+  sudo -E apt-get -qy autoclean
+else
+  yum update -y
+fi
 
 if [[ $(hostname -s) == 'salt' ]]; then
   mkdir -p /etc/salt
@@ -55,12 +63,13 @@ multiprocessing: false
 saltenv: local
 EOFS
 systemctl restart salt-minion
-yum install ftp://ftp.pbone.net/mirror/forensics.cert.org/fedora/cert/20/x86_64/python-M2Crypto-0.26.0-0.x86_64.rpm -y
+
 SCRIPT
 
 Vagrant.configure("2") do |config|
   hosts.each do |name, ip|
     config.vm.define name do |machine|
+      # machine.vm.box = "bento/ubuntu-18.04"
       machine.vm.box = "bento/centos-7.6"
       machine.vm.box_check_update = false
       machine.ssh.insert_key = false
@@ -73,7 +82,7 @@ Vagrant.configure("2") do |config|
           if v.name == 'salt'
             v.customize ["modifyvm", :id, "--memory", 4048]
           else
-            v.customize ["modifyvm", :id, "--memory", 4048]
+            v.customize ["modifyvm", :id, "--memory", 2048]
           end
        end
     end

@@ -2,13 +2,14 @@
 
 ## version
 
-- CentOS 7+
+- `CentOS 7.6+` AND `Ubuntu 18.04+`
 - Saltstack 2018.3.3
 - Etcd v3.3.12
 - Docker 18.0.6-ce
 - Flannel v0.11.0
-- Kubernetes v1.14.1
+- Kubernetes v1.14.3
 - Vault 1.1.1
+- CoreDNS 1.5.0
 
 ## How to quickstart on local
 
@@ -18,21 +19,24 @@
 
 ### download binaries package
 
-setting version on `tests/download.sh` if you want
+setting version on `tests/download.sh` if you want, and update `Makefile` for version
 
-```
+```bash
 make download
 ```
 
 ### startup local env using vagrant
 
-```
+if got some error, re-run `make init`
+
+```bash
+make init
 make init
 ```
 
 ### login local env to test
 
-```
+```bash
 vagrant ssh salt
 sudo su -
 kubectl get no
@@ -40,11 +44,22 @@ kubectl get no
 
 ### other notes
 
-init cluster manual by command
+1. change Linux at local env, edit `Vagrantfile`
+
+```
+Vagrant.configure("2") do |config|
+  hosts.each do |name, ip|
+    config.vm.define name do |machine|
+      machine.vm.box = "bento/ubuntu-18.04"
+      # machine.vm.box = "bento/centos-7.6"
+```
+
+2. init cluster manual by command
 
 ```bash
 vagrant up
 vagrant ssh salt
+# testing salt minions
 salt \* test.ping
 # sync all modules for salt
 salt-run saltutil.sync_all saltenv=local
@@ -54,22 +69,30 @@ salt-run state.orchestrate orch.setting_roles saltenv=local
 salt-run state.orchestrate orch.kubernetes saltenv=local
 ```
 
-> pls notes setting local vm networks interfaces into Pillar files
+> pls notes setting local vm networks interfaces into Pillar files `pillar/local/common/init.sls`
+
+3. if you want add requirements packages
+
+add it into this files:
+
+- `pillar/local/common/packages_centos.sls`
+- `pillar/local/common/packages_ubuntu.sls`
 
 ## TODO
 
+- [x] Add `Ubuntu` support
+- [x] move all OS requirements packages into `package` formulas
+- [ ] [Cilium](https://cilium.io/) network suport
 - [ ] Add good README page
-- [X] CoreDNS addons setup
+- [x] CoreDNS addons setup
 - [ ] Ingress addons setup
 - [ ] Containerd support
-- [ ] Calico network suport
 - [ ] Monitor support(prometheus stack)
 - [ ] Logging support(fluentbit stack)
 - [ ] [istio](https://istio.io/) support
 - [ ] [dex](https://github.com/dexidp/dex) support
-- [ ] cert renew auto as `salt-run` task
+- [ ] cert renew auto
 - [ ] find a way to Testing
-- [ ] all local install from yum repo OR nexus repo
 - [ ] ...
 
 ## Reference

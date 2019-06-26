@@ -8,7 +8,7 @@ DOCKER_VERSION := "18.06.3"
 FLANNEL_VERSION := "0.11.0"
 ETCD_VERSION := "3.3.12"
 VAULT_VERSION := "1.1.1"
-
+CNI_PLUGINS_VERSION := "v0.8.1"
 
 all: formulas
 	@mkdir -p dist
@@ -32,6 +32,7 @@ all: formulas
 	@rsync -a tests/binaries/docker-$(DOCKER_VERSION)-ce.tgz dist/formulas/docker/files
 	@rsync -a tests/binaries/flannel-v$(FLANNEL_VERSION)-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
 	@rsync -a tests/binaries/vault_$(VAULT_VERSION)_linux_amd64.zip dist/formulas/vault/files
+	@rsync -a tests/binaries/cni-plugins-linux-amd64-$(CNI_PLUGINS_VERSION).tgz dist/formulas/kube-cni/cni/files
 	@echo $(GIT_SHA) > ./dist/SHA
 	@find ./dist -type f | sort | xargs $(SHASUM) | sed "s;./dist;/srv;" > MANIFEST
 	@$(SHASUM) MANIFEST | cut -d\  -f1 > MANIFEST.sha256
@@ -39,15 +40,16 @@ all: formulas
 	@echo "Salt $(env) env is ready in ./dist. Enjoy!"
 
 localinstall:
-	@cp -f tests/binaries/kube-apiserver dist/formulas/kube-apiserver/files
-	@cp -f tests/binaries/kube-controller-manager dist/formulas/kube-controller-manager/files
-	@cp -f tests/binaries/kube-scheduler dist/formulas/kube-scheduler/files
-	@cp -f tests/binaries/kubectl dist/formulas/kubectl/files
-	@cp -f tests/binaries/kube-proxy dist/formulas/kube-proxy/files
-	@cp -f tests/binaries/kubelet dist/formulas/kubelet/files
-	@cp -f tests/binaries/etcd-v$(ETCD_VERSION)-linux-amd64.tar.gz dist/formulas/etcd/files
-	@cp -f tests/binaries/vault_$(VAULT_VERSION)_linux_amd64.zip dist/formulas/vault/files
-	@cp -f tests/binaries/flannel-v$(FLANNEL_VERSION)-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
+	@rsync -a tests/binaries/kube-apiserver dist/formulas/kube-apiserver/files
+	@rsync -a tests/binaries/kube-controller-manager dist/formulas/kube-controller-manager/files
+	@rsync -a tests/binaries/kube-scheduler dist/formulas/kube-scheduler/files
+	@rsync -a tests/binaries/kubectl dist/formulas/kubectl/files
+	@rsync -a tests/binaries/kube-proxy dist/formulas/kube-proxy/files
+	@rsync -a tests/binaries/kubelet dist/formulas/kubelet/files
+	@rsync -a tests/binaries/etcd-v$(ETCD_VERSION)-linux-amd64.tar.gz dist/formulas/etcd/files
+	@rsync -a tests/binaries/vault_$(VAULT_VERSION)_linux_amd64.zip dist/formulas/vault/files
+	@rsync -a tests/binaries/flannel-v$(FLANNEL_VERSION)-linux-amd64.tar.gz dist/formulas/kube-cni/flannel/files
+	@rsync -a tests/binaries/cni-plugins-linux-amd64-$(CNI_PLUGINS_VERSION).tgz dist/formulas/kube-cni/cni/files
 lint:
 	@tests/lint.sh
 
@@ -80,6 +82,8 @@ init: all
 	vagrant ssh salt -c "sudo salt salt state.sls salt.master"
 	sleep 20
 	vagrant ssh salt -c "sudo salt \* state.sls salt.minion"
+	sleep 10
+	vagrant ssh salt -c "sudo salt \* state.sls packages"
 	sleep 20
 	vagrant ssh salt -c "sudo salt salt state.sls caserver.initca"
 	sleep 15

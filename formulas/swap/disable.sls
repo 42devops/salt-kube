@@ -1,10 +1,7 @@
-coreutils:
-  pkg:
-    - installed
-
 unmount-swaps:
   cmd.run:
     - name: /sbin/swapoff -a
+    - unless: swapon -s | wc -l
 
 remove-swap-from-fstab:
   file.line:

@@ -1,0 +1,7 @@
+Fedora:
+  pkgs:
+    required:
+      pkgs:
+        - python2-dnf-plugin-versionlock
+
+
