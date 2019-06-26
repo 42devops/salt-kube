@@ -1,6 +1,6 @@
 ## salt-kube Project
 
-## version
+## 1. Package version
 
 - `CentOS 7.6+` AND `Ubuntu 18.04+`
 - Saltstack 2018.3.3
@@ -11,13 +11,13 @@
 - Vault 1.1.1
 - CoreDNS 1.5.0
 
-## How to quickstart on local
+## 2. How to quickstart on local
 
 - install `git` and `vagrant`.
 - clone repo and download binaries package
 - build for env
 
-### download binaries package
+### Download binaries package
 
 setting version on `tests/download.sh` if you want, and update `Makefile` for version
 
@@ -25,7 +25,7 @@ setting version on `tests/download.sh` if you want, and update `Makefile` for ve
 make download
 ```
 
-### startup local env using vagrant
+### Startup local env using vagrant
 
 if got some error, re-run `make init`
 
@@ -34,7 +34,7 @@ make init
 make init
 ```
 
-### login local env to test
+### Login local env to test
 
 ```bash
 vagrant ssh salt
@@ -42,7 +42,7 @@ sudo su -
 kubectl get no
 ```
 
-### other notes
+### Other notes
 
 1. change `Ubuntu` Or `CentOS` at local env, edit `Vagrantfile`
 
@@ -78,7 +78,7 @@ add it into this files:
 - `pillar/local/common/packages_centos.sls`
 - `pillar/local/common/packages_ubuntu.sls`
 
-## TODO
+## 3. TODO
 
 - [x] Add `Ubuntu` support
 - [x] move all OS requirements packages into `package` formulas
@@ -95,7 +95,7 @@ add it into this files:
 - [ ] find a way to Testing
 - [ ] ...
 
-## Reference
+## 4. Reference
 
 - https://github.com/BadgerOps/salt-workspace
 - https://github.com/mitodl/salt-ops
