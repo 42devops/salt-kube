@@ -44,7 +44,7 @@ kubectl get no
 
 ### other notes
 
-1. change Linux at local env, edit `Vagrantfile`
+1. change `Ubuntu` Or `CentOS` at local env, edit `Vagrantfile`
 
 ```
 Vagrant.configure("2") do |config|
@@ -82,7 +82,7 @@ add it into this files:
 
 - [x] Add `Ubuntu` support
 - [x] move all OS requirements packages into `package` formulas
-- [ ] [Cilium](https://cilium.io/) network suport
+- [x] [Cilium](https://cilium.io/) network suport
 - [ ] Add good README page
 - [x] CoreDNS addons setup
 - [ ] Ingress addons setup
