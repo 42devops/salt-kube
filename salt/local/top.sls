@@ -4,7 +4,6 @@ local:
   'roles:salt':
     - match: grain
     - salt-master
-    - vault
   'roles:ca':
     - match: grain
     - caserver
