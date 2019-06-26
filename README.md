@@ -5,11 +5,12 @@
 - `CentOS 7.6+` AND `Ubuntu 18.04+`
 - Saltstack 2018.3.3
 - Etcd v3.3.12
-- Docker 18.0.6-ce
+- Docker v18.0.6-ce
 - Flannel v0.11.0
 - Kubernetes v1.14.3
-- Vault 1.1.1
-- CoreDNS 1.5.0
+- Vault v1.1.1
+- CoreDNS v1.5.0
+- Cilium v1.3.0 * only on `Ubuntu`
 
 ## 2. How to quickstart on local
 
