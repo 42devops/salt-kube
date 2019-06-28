@@ -69,8 +69,8 @@ SCRIPT
 Vagrant.configure("2") do |config|
   hosts.each do |name, ip|
     config.vm.define name do |machine|
-      # machine.vm.box = "bento/ubuntu-18.04"
-      machine.vm.box = "bento/centos-7.6"
+      machine.vm.box = "bento/ubuntu-18.04"
+      # machine.vm.box = "bento/centos-7.6"
       machine.vm.box_check_update = false
       machine.ssh.insert_key = false
       machine.vm.hostname = name

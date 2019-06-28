@@ -5,6 +5,7 @@ packages:
       - less
       - curl
       - openssl
+      - conntrack
     required:
       pkgs:
         - wget
