@@ -8,8 +8,8 @@
 - Etcd v3.3.12
 - Docker v18.0.6-ce
 - **Flannel v0.11.0** (default)
-- Kubernetes v1.14.3
-- Vault v1.1.1
+- Kubernetes v1.15.0
+- Vault v1.1.3
 - CoreDNS v1.5.0
 - Cilium v1.3.0 (only on `Ubuntu`)
 

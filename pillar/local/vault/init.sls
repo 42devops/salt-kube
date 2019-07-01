@@ -1,5 +1,5 @@
 vault:
-  version: 1.1.1
+  version: 1.1.3
   platform: linux_amd64
   dev_mode: False
   verify_download: False
