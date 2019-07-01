@@ -29,6 +29,9 @@ Ubuntu:
     required:
       - python-m2crypto
       - openssl
+      - python-apt
+      - python-software-properties
+      - python-pycurl
   pips:
     required:
       pkgs:

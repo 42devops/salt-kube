@@ -6,6 +6,7 @@ packages:
       - curl
       - openssl
       - conntrack
+      - socat
     required:
       pkgs:
         - wget

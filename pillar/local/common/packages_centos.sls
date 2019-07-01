@@ -6,6 +6,7 @@ packages:
       - curl
       - openssl
       - ipvsadm
+      - socat
     required:
       pkgs:
         - wget
