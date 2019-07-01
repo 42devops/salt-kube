@@ -3,15 +3,15 @@
 ## 1. Package version
 
 - CentOS 7.6+
-- **Ubuntu 18.04** \*default
+- **Ubuntu 18.04** (default)
 - Saltstack 2018.3.3
 - Etcd v3.3.12
 - Docker v18.0.6-ce
-- **Flannel v0.11.0** \*default
+- **Flannel v0.11.0** (default)
 - Kubernetes v1.14.3
 - Vault v1.1.1
 - CoreDNS v1.5.0
-- Cilium v1.3.0 \* only on `Ubuntu`
+- Cilium v1.3.0 (only on `Ubuntu`)
 
 ## 2. How to quickstart on local
 
