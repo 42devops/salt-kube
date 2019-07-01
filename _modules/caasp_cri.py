@@ -224,5 +224,5 @@ def needs_docker():
     configured inside of the pillars.
     '''
 
-    node_roles = __salt__['grains.get']('roles', [])
+    node_roles = __salt__['pillar.get']('cri:chosen', [])
     return any(role in _ROLES_REQUIRING_DOCKER for role in node_roles)

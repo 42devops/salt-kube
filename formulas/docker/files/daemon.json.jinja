@@ -3,6 +3,7 @@
 {%- set logmaxsize = salt.caasp_pillar.get('docker:daemon:log-max-size') -%}
 {%- set registries           = salt.caasp_pillar.get('registries') -%}
 {
+  "exec-opts": ["native.cgroupdriver=systemd"],
   {% if registries|length > 0 -%}
   "insecure-registries": [
         {%- for registry in registries %}

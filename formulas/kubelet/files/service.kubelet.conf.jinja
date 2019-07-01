@@ -18,9 +18,7 @@ ExecStart=/usr/local/bin/kubelet \
   --logtostderr=false \
   --image-pull-progress-deadline=5m \
   --kubeconfig={{ pillar['paths']['kubelet_config'] }} \
-  --anonymous-auth=false \
   --register-node=true \
-  --allocate-node-cidrs \
 {%- if salt.caasp_pillar.get('cni:plugin') == 'cilium' %}
   --network-plugin=cni \
   --cni-conf-dir=/etc/cni/net.d \
