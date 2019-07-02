@@ -8,3 +8,6 @@ include:
 {% if salt['pillar.get']('cni:plugin', 'flannel').lower() == "cilium" %}
   - kube-cni.cilium.install
 {% endif %}
+{% if salt['pillar.get']('istio:enable', 'false') %}
+  - istio.install
+{% endif %}

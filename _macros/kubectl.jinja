@@ -69,6 +69,16 @@
                   **kwargs) }}
 {%- endmacro %}
 
+{% macro kubectl_apply_file(src, manifest) -%}
+{{ manifest }}:
+  file.managed:
+    - name:        {{ manifest }}
+    - source:      {{ src }}
+  {{ _kubectl_run("apply -f " + manifest,
+                  watch=["file: " + manifest] + kwargs.pop('watch', []),
+                  **kwargs) }}
+{%- endmacro %}
+
 {% macro kubectl_apply_dir_template(src, dest) -%}
 {{ dest }}:
   file.recurse:
