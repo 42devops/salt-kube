@@ -12,6 +12,7 @@
 - Vault v1.1.1
 - CoreDNS v1.5.0
 - Cilium v1.3.0 (only on `Ubuntu`)
+- Istio 1.1.7
 
 ## 2. How to quickstart on local
 
@@ -91,7 +92,7 @@ add it into this files:
 - [ ] Containerd support
 - [ ] Monitor support(prometheus stack)
 - [ ] Logging support(fluentbit stack)
-- [ ] [istio](https://istio.io/) support
+- [x] [istio](https://istio.io/) support
 - [ ] [dex](https://github.com/dexidp/dex) support
 - [ ] cert renew auto
 - [ ] find a way to Testing
