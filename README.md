@@ -7,11 +7,11 @@
 - Saltstack 2018.3.3
 - Etcd v3.3.12
 - Docker v18.0.6-ce
-- **Flannel v0.11.0** (default)
+- Flannel v0.11.0
 - Kubernetes v1.14.3
 - Vault v1.1.1
 - CoreDNS v1.5.0
-- Cilium v1.3.0 (only on `Ubuntu`)
+- **Cilium v1.5.5** (default) (only on `Ubuntu`)
 - Istio 1.1.7
 
 ## 2. How to quickstart on local
