@@ -99,7 +99,7 @@ kube_log_level:   '2'
 
 cni:
   plugin: 'cilium'
-  cilium_version: 'v1.3.0'
+  cilium_version: 'v1.5.5'
   cilium_debug: false
   cilium_disable_ipv4: false
   # Etcd SSL dirs
@@ -112,7 +112,7 @@ cni:
   cilium_memory_requests: 64M
   cilium_cpu_requests: 100m
   # Optional features
-  cilium_enable_prometheus: false
+  cilium_enable_prometheus: true
   cni_plugins_version: 'v0.8.1'
   cni_plugins_hash: 'e9bfc78acd3ae71be77eb8f3e890cc9078a33cc3797703b8ff2fc3077a232252'
 
@@ -120,22 +120,13 @@ cni:
 #  chosen: ['docker', 'crio']
 cri:
   chosen: 'docker'
-  socket_timeout: 20
   docker:
     description: Docker open-source container engine
-    package: docker
-    service: docker
-    socket: /var/run/dockershim.sock
   crio:
-    description: CRI-O
-    package: cri-o
-    service: crio
-    socket: /var/run/crio/crio.sock
-    dirs:
-      root: /var/lib/containers/storage
-      runroot: /var/lib/containers/storage
+    description: CRI-O container engine
+
 #private_regristry: '172.21.3.76:5000'
 
 istio:
-  enable: true
+  enable: false
   istio_version: "1.1.7"

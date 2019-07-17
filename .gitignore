@@ -10,3 +10,4 @@ tests/binaries
 tags
 .vscode
 *.lock
+TMP

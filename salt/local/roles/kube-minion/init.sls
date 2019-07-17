@@ -3,6 +3,7 @@ include:
   - caserver.ca-cert
   - kube-cni
 {%- if salt.caasp_pillar.get('cri:chosen') == 'docker' %}
+  - crontab.kube-minion
   - docker
 {%- endif %}
 {%- if salt.caasp_pillar.get('cri:chosen') == 'crio' %}
@@ -11,4 +12,3 @@ include:
   - cert
   - kubelet
   - kube-proxy
-  - crontab.kube-minon
