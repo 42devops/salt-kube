@@ -9,7 +9,7 @@
 - Docker v18.0.6-ce
 - Flannel v0.11.0
 - Kubernetes v1.14.3
-- Vault v1.1.1
+- Vault v1.1.3
 - CoreDNS v1.5.0
 - **Cilium v1.5.5** (default) (only on `Ubuntu`)
 - Istio 1.1.7
