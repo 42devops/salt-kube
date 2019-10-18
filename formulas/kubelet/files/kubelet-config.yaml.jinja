@@ -39,7 +39,11 @@ runtimeRequestTimeout: 2m0s
 streamingConnectionIdleTimeout: 5m0s
 maxPods: 110
 podPidsLimit: -1
+{% if grains['os'] == "Ubuntu" %}
+resolvConf: "/run/systemd/resolve/resolv.conf"
+{% else %}
 resolvConf: "/etc/resolv.conf"
+{% endif %}
 cpuCFSQuota: true
 maxOpenFiles: 1000000
 contentType: application/vnd.kubernetes.protobuf
