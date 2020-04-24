@@ -1,5 +1,5 @@
 ## salt-kube Project
-
+new version for Kubernetes v1.17.5 goto [salt-kube-lite](https://github.com/42devops/salt-kube-lite)
 ## 1. Package version
 
 - CentOS 7.6+
